@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анимация катящихся тел</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .input-container label {
+            margin-bottom: 5px;
+        }
+
+        .input-container input {
+            width: 200px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .input-container button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .ball {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #3498db;
+            position: absolute;
+            animation-duration: 2s;
+        }
+
+        .ball1 {
+            animation-name: moveLeft;
+        }
+
+        .ball2 {
+            animation-name: moveRight;
+        }
+
+        @keyframes moveLeft {
+            from {
+                left: 0;
+            }
+            to {
+                left: calc(50% - 25px); /* Center the ball */
+            }
+        }
+
+        @keyframes moveRight {
+            from {
+                left: calc(50% + 25px); /* Start to the right of center */
+            }
+            to {
+                left: 100%;
+                transform: translateX(-100%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="input-container">
+        <h2>Расчет закона сохранения импульса</h2>
+        <label for="mass1">Масса тела 1 (кг):</label>
+        <input type="number" id="mass1" placeholder="Масса тела 1" required>
+        <label for="velocity1">Скорость тела 1 (м/с):</label>
+        <input type="number" id="velocity1" placeholder="Скорость тела 1" required>
+        <label for="mass2">Масса тела 2 (кг):</label>
+        <input type="number" id="mass2" placeholder="Масса тела 2" required>
+        <label for="velocity2">Скорость тела 2 (м/с):</label>
+        <input type="number" id="velocity2" placeholder="Скорость тела 2" required>
+        <button onclick="calculateMomentum()">Рассчитать импульс</button>
+    </div>
+
+    <div class="ball ball1"></div>
+    <div class="ball ball2"></div>
+
+    <script>
+        function calculateMomentum() {
+            const mass1 = parseFloat(document.getElementById('mass1').value);
+            const velocity1 = parseFloat(document.getElementById('velocity1').value);
+            const mass2 = parseFloat(document.getElementById('mass2').value);
+            const velocity2 = parseFloat(document.getElementById('velocity2').value);
+
+            if (isNaN(mass1) || isNaN(velocity1) || isNaN(mass2) || isNaN(velocity2)) {
+                alert("Пожалуйста, введите все значения.");
+                return;
+            }
+
+            const momentum1 = mass1 * velocity1;
+            const momentum2 = mass2 * velocity2;
+            const totalMomentum = momentum1 + momentum2;
+
+            alert(`Импульс тела 1: ${momentum1.toFixed(2)} кг·м/с\nИмпульс тела 2: ${momentum2.toFixed(2)} кг·м/с\nОбщий импульс: ${totalMomentum.toFixed(2)} кг·м/с`);
+
+            // Запускаем анимацию
+            const ball1 = document.querySelector('.ball1');
+            const ball2 = document.querySelector('.ball2');
+
+            ball1.style.animationPlayState = 'running';
+            ball2.style.animationPlayState = 'running';
+        }
+    </script>
+</body>
+</html>

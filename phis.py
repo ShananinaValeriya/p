@@ -6,18 +6,17 @@ import numpy as np
 
 def calculate_momentum():
     try:
-        m1 = float(entry_m1.get())
-        v1 = float(entry_v1.get())
-        m2 = float(entry_m2.get())
-        v2 = float(entry_v2.get())
+        m1 = float(entry_m1.get())  # Масса первого тела
+        v1 = float(entry_v1.get())  # Скорость первого тела
+        m2 = float(entry_m2.get())  # Масса второго тела
+        v2 = float(entry_v2.get())  # Скорость второго тела
 
-        # Начальный и конечный импульсы
+        # Начальный импульс
         initial_momentum = m1 * v1 + m2 * v2
 
-        # После столкновения
-        # Применим закон сохранения импульса
-        v1_final = (m1 * v1 + m2 * v2) / (m1 + m2)
-        final_momentum = (m1 + m2) * v1_final
+        # Применение закона сохранения импульса: финальная скорость тандемного тела
+        final_velocity = (m1 * v1 + m2 * v2) / (m1 + m2)
+        final_momentum = (m1 + m2) * final_velocity
 
         # Проверка сохранения импульса
         if np.isclose(initial_momentum, final_momentum):
@@ -28,19 +27,19 @@ def calculate_momentum():
         messagebox.showinfo("Результат", result)
 
         # Визуализация
-        visualize(m1, v1, m2, v2, v1_final)
+        visualize(m1, v1, m2, v2, final_velocity)
 
     except ValueError:
         messagebox.showerror("Ошибка", "Введите корректные числовые значения!")
 
 
-def visualize(m1, v1, m2, v2, v1_final):
+def visualize(m1, v1, m2, v2, final_velocity):
     plt.figure(figsize=(10, 5))
 
-    # Условия
-    objects = ['Тело 1', 'Тело 2', 'Тело 1 после']
-    masses = [m1, m2, m1 + m2]
-    velocities = [v1, v2, v1_final]
+    # Названия объектов
+    objects = ['Тело 1', 'Тело 2', 'Тело 1+2 после']
+    masses = [m1, m2, m1 + m2]  # Массы тел
+    velocities = [v1, v2, final_velocity]  # Скорости
 
     # Создание столбцов на графике
     x = np.arange(len(objects))
@@ -68,6 +67,7 @@ tk.Label(root, text="Скорость тела 1 (м/с):").grid(row=1)
 tk.Label(root, text="Масса тела 2 (кг):").grid(row=2)
 tk.Label(root, text="Скорость тела 2 (м/с):").grid(row=3)
 
+# Поля ввода
 entry_m1 = tk.Entry(root)
 entry_v1 = tk.Entry(root)
 entry_m2 = tk.Entry(root)
@@ -78,6 +78,7 @@ entry_v1.grid(row=1, column=1)
 entry_m2.grid(row=2, column=1)
 entry_v2.grid(row=3, column=1)
 
+# Кнопка для вычисления
 tk.Button(root, text="Рассчитать", command=calculate_momentum).grid(
     row=4, columnspan=2)
 
