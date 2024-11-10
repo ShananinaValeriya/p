@@ -24,15 +24,19 @@ class ImpulseLawApp:
         self.notebook.add(self.calculation_tab, text='Вычисление импульса')
         self.create_calculation_tab()
 
-        # Вкладка графиков
+        # Вкладка графиков (по умолчанию отключена)
         self.graph_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.graph_tab, text='Графики')
         self.create_graph_tab()
+        # Отключаем вкладку графиков
+        self.notebook.tab(self.graph_tab, state='disabled')
 
-        # Вкладка демонстрации
+        # Вкладка демонстрации (по умолчанию отключена)
         self.demo_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.demo_tab, text='Демонстрация')
         self.create_demo_tab()
+        # Отключаем вкладку демонстрации
+        self.notebook.tab(self.demo_tab, state='disabled')
 
         # Вкладка примеров
         self.examples_tab = ttk.Frame(self.notebook)
@@ -143,6 +147,10 @@ class ImpulseLawApp:
             # Обновляем текстовое поле с результатами
             self.result_label.config(text=result_text)
 
+            # Активируем вкладки графиков и демонстрации
+            self.notebook.tab(self.graph_tab, state='normal')
+            self.notebook.tab(self.demo_tab, state='normal')
+
         except ValueError:
             messagebox.showerror(
                 "Ошибка", "Пожалуйста, введите корректные числовые значения.")
@@ -232,6 +240,17 @@ class ImpulseLawApp:
                     # Перемещаем шары, чтобы они не пересекались
                     x1 = x2 - (0.5 + 0.5)  # Устанавливаем позицию первого шара
 
+                    # Устанавливаем направление движения
+                    if v1 > 0:
+                        v1 = abs(v1)  # Первое тело движется вправо
+                    else:
+                        v1 = -abs(v1)  # Первое тело движется влево
+
+                    if v2 > 0:
+                        v2 = -abs(v2)  # Второе тело движется влево
+                    else:
+                        v2 = abs(v2)  # Второе тело движется вправо
+
                 # Обновляем положение шаров
                 ball1.center = (x1, 0)
                 ball2.center = (x2, 0)
@@ -303,6 +322,9 @@ class ImpulseLawApp:
                 v2_final = ((m2 - m1) * v2 + 2 * m1 * v1) / (m1 + m2)
                 v1, v2 = v1_final, v2_final  # Обновляем скорости после столкновения
 
+                # Перемещаем шары, чтобы они не пересекались
+                x1 = x2 - (0.5 + 0.5)  # Устанавливаем позицию первого шара
+
                 # Устанавливаем направление движения
                 if v1 > 0:
                     v1 = abs(v1)  # Первое тело движется вправо
@@ -313,9 +335,6 @@ class ImpulseLawApp:
                     v2 = -abs(v2)  # Второе тело движется влево
                 else:
                     v2 = abs(v2)  # Второе тело движется вправо
-
-                # Перемещаем шары, чтобы они не пересекались
-                x1 = x2 - (0.5 + 0.5)  # Устанавливаем позицию первого шара
 
             # Обновляем положение шаров
             ball1.center = (x1, 0)
