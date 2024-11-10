@@ -24,6 +24,12 @@ class ImpulseLawApp:
         self.notebook.add(self.calculation_tab, text='Вычисление импульса')
         self.create_calculation_tab()
 
+        # Вкладка расчета параметров
+        self.parameter_calculation_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.parameter_calculation_tab,
+                          text='Расчет параметров')
+        self.create_parameter_calculation_tab()
+
         # Вкладка графиков (по умолчанию отключена)
         self.graph_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.graph_tab, text='Графики')
@@ -84,6 +90,216 @@ class ImpulseLawApp:
         self.result_label = tk.Label(
             self.calculation_tab, text="", wraplength=400)
         self.result_label.pack(pady=10)
+
+    def create_parameter_calculation_tab(self):
+        self.parameter_label = tk.Label(
+            self.parameter_calculation_tab, text="Выберите параметр для расчета:")
+        self.parameter_label.pack(pady=10)
+
+        self.parameter_var = tk.StringVar()
+        self.parameter_dropdown = ttk.Combobox(
+            self.parameter_calculation_tab, textvariable=self.parameter_var)
+        self.parameter_dropdown['values'] = (
+            "Конечная скорость первого тела",
+            "Конечная скорость второго тела",
+            "Общий импульс после столкновения",
+            "Начальная скорость первого тела",
+            "Начальная скорость второго тела",
+            "Масса первого тела",
+            "Масса второго тела"
+        )
+        self.parameter_dropdown.pack(pady=10)
+        self.parameter_dropdown.bind(
+            "<<ComboboxSelected>>", self.update_input_fields)
+
+        self.input_frame = ttk.Frame(self.parameter_calculation_tab)
+        self.input_frame.pack(pady=10)
+
+        self.calculate_param_button = tk.Button(
+            self.parameter_calculation_tab, text="Рассчитать", command=self.calculate_parameters)
+        self.calculate_param_button.pack(pady=10)
+
+        self.param_result_label = tk.Label(
+            self.parameter_calculation_tab, text="", wraplength=400)
+        self.param_result_label.pack(pady=10)
+
+    def update_input_fields(self, event):
+        for widget in self.input_frame.winfo_children():
+            widget.destroy()
+
+        selected_param = self.parameter_var.get()
+
+        if selected_param in ["Конечная скорость первого тела", "Конечная скорость второго тела"]:
+            tk.Label(self.input_frame, text="Масса первого тела (kg):").pack()
+            self.mass1_entry_param = tk.Entry(self.input_frame)
+            self.mass1_entry_param.pack()
+
+            tk.Label(self.input_frame,
+                     text="Скорость первого тела (m/s):").pack()
+            self.velocity1_entry_param = tk.Entry(self.input_frame)
+            self.velocity1_entry_param.pack()
+
+            tk.Label(self.input_frame, text="Масса второго тела (kg):").pack()
+            self.mass2_entry_param = tk.Entry(self.input_frame)
+            self.mass2_entry_param.pack()
+
+            tk.Label(self.input_frame,
+                     text="Скорость второго тела (m/s):").pack()
+            self.velocity2_entry_param = tk.Entry(self.input_frame)
+            self.velocity2_entry_param.pack()
+
+        elif selected_param == "Общий импульс после столкновения":
+            tk.Label(self.input_frame, text="Масса первого тела (kg):").pack()
+            self.mass1_entry_param = tk.Entry(self.input_frame)
+            self.mass1_entry_param.pack()
+
+            tk.Label(self.input_frame,
+                     text="Скорость первого тела (m/s):").pack()
+            self.velocity1_entry_param = tk.Entry(self.input_frame)
+            self.velocity1_entry_param.pack()
+
+            tk.Label(self.input_frame, text="Масса второго тела (kg):").pack()
+            self.mass2_entry_param = tk.Entry(self.input_frame)
+            self.mass2_entry_param.pack()
+
+            tk.Label(self.input_frame,
+                     text="Скорость второго тела (m/s):").pack()
+            self.velocity2_entry_param = tk.Entry(self.input_frame)
+            self.velocity2_entry_param.pack()
+
+        elif selected_param in ["Начальная скорость первого тела", "Начальная скорость второго тела",
+                                "Масса первого тела", "Масса второго тела"]:
+            if selected_param == "Начальная скорость первого тела":
+                tk.Label(self.input_frame,
+                         text="Конечная скорость первого тела (m/s):").pack()
+                self.final_velocity1_entry = tk.Entry(self.input_frame)
+                self.final_velocity1_entry.pack()
+
+                tk.Label(self.input_frame,
+                         text="Масса второго тела (kg):").pack()
+                self.mass2_entry_param = tk.Entry(self.input_frame)
+                self.mass2_entry_param.pack()
+
+                tk.Label(self.input_frame,
+                         text="Конечная скорость второго тела (m/s):").pack()
+                self.final_velocity2_entry = tk.Entry(self.input_frame)
+                self.final_velocity2_entry.pack()
+
+            elif selected_param == "Начальная скорость второго тела":
+                tk.Label(self.input_frame,
+                         text="Конечная скорость второго тела (m/s):").pack()
+                self.final_velocity2_entry = tk.Entry(self.input_frame)
+                self.final_velocity2_entry.pack()
+
+                tk.Label(self.input_frame,
+                         text="Масса первого тела (kg):").pack()
+                self.mass1_entry_param = tk.Entry(self.input_frame)
+                self.mass1_entry_param.pack()
+
+                tk.Label(self.input_frame,
+                         text="Конечная скорость первого тела (m/s):").pack()
+                self.final_velocity1_entry = tk.Entry(self.input_frame)
+                self.final_velocity1_entry.pack()
+
+            elif selected_param == "Масса первого тела":
+                tk.Label(self.input_frame,
+                         text="Начальная скорость первого тела (m/s):").pack()
+                self.initial_velocity1_entry = tk.Entry(self.input_frame)
+                self.initial_velocity1_entry.pack()
+
+                tk.Label(self.input_frame,
+                         text="Конечная скорость второго тела (m/s):").pack()
+                self.final_velocity2_entry = tk.Entry(self.input_frame)
+                self.final_velocity2_entry.pack()
+
+                tk.Label(self.input_frame,
+                         text="Масса второго тела (kg):").pack()
+                self.mass2_entry_param = tk.Entry(self.input_frame)
+                self.mass2_entry_param.pack()
+
+            elif selected_param == "Масса второго тела":
+                tk.Label(self.input_frame,
+                         text="Начальная скорость второго тела (m/s):").pack()
+                self.initial_velocity2_entry = tk.Entry(self.input_frame)
+                self.initial_velocity2_entry.pack()
+
+                tk.Label(self.input_frame,
+                         text="Конечная скорость первого тела (m/s):").pack()
+                self.final_velocity1_entry = tk.Entry(self.input_frame)
+                self.final_velocity1_entry.pack()
+
+                tk.Label(self.input_frame,
+                         text="Масса первого тела (kg):").pack()
+                self.mass1_entry_param = tk.Entry(self.input_frame)
+                self.mass1_entry_param.pack()
+
+    def calculate_parameters(self):
+        selected_param = self.parameter_var.get()
+
+        try:
+            if selected_param in ["Конечная скорость первого тела", "Конечная скорость второго тела"]:
+                m1 = float(self.mass1_entry_param.get())
+                v1 = float(self.velocity1_entry_param.get())
+                m2 = float(self.mass2_entry_param.get())
+                v2 = float(self.velocity2_entry_param.get())
+
+                if selected_param == "Конечная скорость первого тела":
+                    v1_final = ((m1 - m2) * v1 + 2 * m2 * v2) / (m1 + m2)
+                    result_text = f"Конечная скорость первого тела: {v1_final:.2f} м/с"
+                else:
+                    v2_final = ((m2 - m1) * v2 + 2 * m1 * v1) / (m1 + m2)
+                    result_text = f"Конечная скорость второго тела: {v2_final:.2f} м/с"
+
+            elif selected_param == "Общий импульс после столкновения":
+                m1 = float(self.mass1_entry_param.get())
+                v1 = float(self.velocity1_entry_param.get())
+                m2 = float(self.mass2_entry_param.get())
+                v2 = float(self.velocity2_entry_param.get())
+
+                total_impulse = m1 * v1 + m2 * v2
+                result_text = f"Общий импульс после столкновения: {total_impulse:.2f} кг*м/с"
+
+            elif selected_param == "Начальная скорость первого тела":
+                v2_final = float(self.final_velocity2_entry.get())
+                m2 = float(self.mass2_entry_param.get())
+                v1_final = float(self.final_velocity1_entry.get())
+
+                v1_initial = ((m2 * (v2_final - v1_final)) /
+                              (1))  # Упрощенная формула
+                result_text = f"Начальная скорость первого тела: {v1_initial:.2f} м/с"
+
+            elif selected_param == "Начальная скорость второго тела":
+                v1_final = float(self.final_velocity1_entry.get())
+                m1 = float(self.mass1_entry_param.get())
+                v2_final = float(self.final_velocity2_entry.get())
+
+                v2_initial = ((m1 * (v1_final - v2_final)) /
+                              (1))  # Упрощенная формула
+                result_text = f"Начальная скорость второго тела: {v2_initial:.2f} м/с"
+
+            elif selected_param == "Масса первого тела":
+                v2_final = float(self.final_velocity2_entry.get())
+                v1_initial = float(self.initial_velocity1_entry.get())
+                v2_initial = float(self.final_velocity2_entry.get())
+
+                m1 = (v1_initial * v2_final) / \
+                    (v2_initial)  # Упрощенная формула
+                result_text = f"Масса первого тела: {m1:.2f} кг"
+
+            elif selected_param == "Масса второго тела":
+                v1_final = float(self.final_velocity1_entry.get())
+                v2_initial = float(self.initial_velocity2_entry.get())
+                v1_initial = float(self.final_velocity1_entry.get())
+
+                m2 = (v2_initial * v1_final) / \
+                    (v1_initial)  # Упрощенная формула
+                result_text = f"Масса второго тела: {m2:.2f} кг"
+
+            self.param_result_label.config(text=result_text)
+
+        except ValueError:
+            messagebox.showerror(
+                "Ошибка", "Пожалуйста, введите корректные числовые значения.")
 
     def create_graph_tab(self):
         self.graph_button = tk.Button(
@@ -165,16 +381,16 @@ class ImpulseLawApp:
             if not self.validate_inputs(m1, v1, m2, v2):
                 return
 
-        # Параметры для графика
+            # Параметры для графика
             t = np.linspace(0, 2, 100)
             x1_initial = 0
             x2_initial = 10
 
-        # Позиции тел до столкновения
+            # Позиции тел до столкновения
             x1 = x1_initial + v1 * t
             x2 = x2_initial - v2 * t
 
-        # Создаем фигуру и оси
+            # Создаем фигуру и оси
             fig, ax = plt.subplots(figsize=(10, 5))
             ax.set_xlim(0, 2)
             ax.set_ylim(-1, 12)
@@ -183,24 +399,24 @@ class ImpulseLawApp:
             ax.set_ylabel('Позиция (м)')
             ax.grid()
 
-        # Создаем пустые линии для анимации
+            # Создаем пустые линии для анимации
             line1, = ax.plot([], [], label='Первое тело', color='blue')
             line2, = ax.plot([], [], label='Второе тело', color='red')
 
-        # Отметим момент столкновения
+            # Отметим момент столкновения
             collision_time = (x2_initial - x1_initial) / (v1 + v2)
             ax.axvline(x=collision_time, color='green',
                        linestyle='--', label='Столкновение')
 
             ax.legend()
 
-        # Инициализация функции
+            # Инициализация функции
             def init():
                 line1.set_data([], [])
                 line2.set_data([], [])
                 return line1, line2
 
-        # Функция обновления для анимации
+            # Функция обновления для анимации
             def update(frame):
                 line1.set_data(t[:frame], x1[:frame])
                 line2.set_data(t[:frame], x2[:frame])
@@ -209,7 +425,7 @@ class ImpulseLawApp:
             # Установите желаемую скорость (например, 50 мс между кадрами)
             speed = 100
 
-        # Запускаем анимацию
+            # Запускаем анимацию
             ani = animation.FuncAnimation(fig, update, frames=len(
                 t), init_func=init, blit=True, repeat=False)
             plt.show()
