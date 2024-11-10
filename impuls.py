@@ -165,29 +165,53 @@ class ImpulseLawApp:
             if not self.validate_inputs(m1, v1, m2, v2):
                 return
 
-            # Параметры для графика
+        # Параметры для графика
             t = np.linspace(0, 2, 100)
             x1_initial = 0
             x2_initial = 10
 
-            # Позиции тел до столкновения
+        # Позиции тел до столкновения
             x1 = x1_initial + v1 * t
             x2 = x2_initial - v2 * t
 
-            plt.figure(figsize=(10, 5))
-            plt.plot(t, x1, label='Первое тело', color='blue')
-            plt.plot(t, x2, label='Второе тело', color='red')
+        # Создаем фигуру и оси
+            fig, ax = plt.subplots(figsize=(10, 5))
+            ax.set_xlim(0, 2)
+            ax.set_ylim(-1, 12)
+            ax.set_title('Движение двух тел')
+            ax.set_xlabel('Время (с)')
+            ax.set_ylabel('Позиция (м)')
+            ax.grid()
 
-            # Отметим момент столкновения
+        # Создаем пустые линии для анимации
+            line1, = ax.plot([], [], label='Первое тело', color='blue')
+            line2, = ax.plot([], [], label='Второе тело', color='red')
+
+        # Отметим момент столкновения
             collision_time = (x2_initial - x1_initial) / (v1 + v2)
-            plt.axvline(x=collision_time, color='green',
-                        linestyle='--', label='Столкновение')
+            ax.axvline(x=collision_time, color='green',
+                       linestyle='--', label='Столкновение')
 
-            plt.title('Движение двух тел')
-            plt.xlabel('Время (с)')
-            plt.ylabel('Позиция (м)')
-            plt.legend()
-            plt.grid()
+            ax.legend()
+
+        # Инициализация функции
+            def init():
+                line1.set_data([], [])
+                line2.set_data([], [])
+                return line1, line2
+
+        # Функция обновления для анимации
+            def update(frame):
+                line1.set_data(t[:frame], x1[:frame])
+                line2.set_data(t[:frame], x2[:frame])
+                return line1, line2
+
+            # Установите желаемую скорость (например, 50 мс между кадрами)
+            speed = 100
+
+        # Запускаем анимацию
+            ani = animation.FuncAnimation(fig, update, frames=len(
+                t), init_func=init, blit=True, repeat=False)
             plt.show()
         except ValueError:
             messagebox.showerror(
