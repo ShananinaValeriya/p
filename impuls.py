@@ -320,10 +320,6 @@ class ImpulseLawApp:
             self.examples_tab, text="Пример 2", command=self.example_collision_2)
         self.example2_button.pack(pady=10)
 
-        self.example3_button = tk.Button(
-            self.examples_tab, text="Пример 3", command=self.example_collision_3)
-        self.example3_button.pack(pady=10)
-
     def validate_inputs(self, m1, v1, m2, v2):
         if m1 <= 0:
             messagebox.showerror(
@@ -509,7 +505,7 @@ class ImpulseLawApp:
     def example_collision_1(self):
         # Пример 1: Первое тело неподвижно, второе катится
         m1, m2 = 1, 1  # Массы
-        v1, v2 = 3, 0  # Скорости
+        v1, v2 = 3, 3  # Скорости
 
         self.run_collision_animation(m1, v1, m2, v2)
 
@@ -517,13 +513,6 @@ class ImpulseLawApp:
         # Пример 2: Оба тела движутся друг к другу
         m1, m2 = 1, 1  # Массы
         v1, v2 = 3, 3  # Скорости
-
-        self.run_collision_animation(m1, v1, m2, v2)
-
-    def example_collision_3(self):
-        # Пример 3: Одно тело догоняет другое
-        m1, m2 = 1, 1  # Массы
-        v1, v2 = 3, 1  # Скорости
 
         self.run_collision_animation(m1, v1, m2, v2)
 
